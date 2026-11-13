@@ -2,10 +2,7 @@ FROM --platform=linux/386 docker.io/i386/debian:bookworm
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN echo 'deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware' > /etc/apt/sources.list && \
-    echo 'deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware' >> /etc/apt/sources.list && \
-    echo 'deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware' >> /etc/apt/sources.list && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       xorg xinit \
       xfce4 \
