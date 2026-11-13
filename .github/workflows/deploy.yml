@@ -103,6 +103,14 @@ jobs:
       # Checks-out our repository under $GITHUB_WORKSPACE, so our job can access it
       - uses: actions/checkout@v4
 
+      # --- ADD THESE TWO STEPS ---
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      # ---------------------------
+
       # Setting the IMAGE_NAME variable in GITHUB_ENV to <Dockerfile name>_<date>_<run_id>.ext2.
       - name: Generate the image_name.
         id: image_name_gen
@@ -112,9 +120,16 @@ jobs:
       # Create directory to host the image from.
       - run: sudo mkdir -p $DEPLOY_DIR
 
-      # Build the i386 Dockerfile image.
-      - run: docker build --network=host . --tag $TAG --file ${{ github.event.inputs.DOCKERFILE_PATH }} --platform=i386
-
+      # --- MODIFIED BUILD COMMAND ---
+      - name: Build the i386 Dockerfile image
+        run: |
+          docker buildx build \
+            --platform linux/386 \
+            --network=host \
+            -t $TAG \
+            -f ${{ github.event.inputs.DOCKERFILE_PATH }} \
+            --load .
+      # ------------------------------
       
       # Run the docker image so that we can export the container.
       # Run the Docker container with the Google Public DNS nameservers: 8.8.8.8, 8.8.4.4
