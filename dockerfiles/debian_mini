@@ -7,7 +7,7 @@ RUN apt-get update && \
       xorg xinit \
       xfce4 \
       thunar \
-      plasma-discover plasma-discover-backend-flatpak \
+      plasma-discover \
       dbus-x11 \
       locales \
       ca-certificates \
